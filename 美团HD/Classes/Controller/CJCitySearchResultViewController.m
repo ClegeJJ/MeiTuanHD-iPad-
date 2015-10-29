@@ -8,25 +8,16 @@
 
 #import "CJCitySearchResultViewController.h"
 #import "UIView+AutoLayout.h"
+#import "CJMetaTool.h"
 #import "CJCity.h"
 #import "CJConst.h"
 #import "MJExtension.h"
 
 @interface CJCitySearchResultViewController ()
-@property (nonatomic, strong) NSArray *cities;
 @property (nonatomic, strong) NSArray *resultCities;
 @end
 
 @implementation CJCitySearchResultViewController
-
-- (NSArray *)cities
-{
-    if (!_cities) {
-        self.cities = [CJCity objectArrayWithFilename:@"cities.plist"];
-    }
-    return _cities;
-}
-
 
 
 
@@ -38,7 +29,7 @@
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name contains %@ or pinYin contains %@ or pinYinHead contains %@",searchText,searchText,searchText];
     
-    self.resultCities = [self.cities filteredArrayUsingPredicate:predicate];
+    self.resultCities = [[CJMetaTool cities] filteredArrayUsingPredicate:predicate];
     
     [self.tableView reloadData];
     
