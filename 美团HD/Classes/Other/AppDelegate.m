@@ -7,7 +7,8 @@
 //
 
 #import "AppDelegate.h"
-
+#import "CJNavigtionController.h"
+#import "CJHomeViewController.h"
 @interface AppDelegate ()
 
 @end
@@ -16,7 +17,14 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    UIWindow *window = [[UIWindow alloc] init];
+    window.frame = [UIScreen mainScreen].bounds;
+    window.rootViewController = [[CJNavigtionController alloc] initWithRootViewController:[[CJHomeViewController alloc] init]];
+    [window makeKeyAndVisible];
+    self.window = window;
+    
+    
     return YES;
 }
 
