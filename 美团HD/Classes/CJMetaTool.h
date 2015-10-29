@@ -12,4 +12,7 @@
 
 + (NSArray *)cities;
 
+
++ (NSArray *)categories;
+
 @end

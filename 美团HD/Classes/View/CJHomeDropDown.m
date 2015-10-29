@@ -7,14 +7,13 @@
 //
 
 #import "CJHomeDropDown.h"
-#import "CJCategory.h"
 #import "CJHomeDropDownMainCell.h"
 #import "CJHomeDropDownSubCell.h"
 @interface CJHomeDropDown () <UITableViewDelegate,UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UITableView *mainTableView;
 @property (weak, nonatomic) IBOutlet UITableView *subTableView;
-@property (nonatomic, strong) CJCategory *seledtedCategory;
+@property (nonatomic, assign) NSInteger *seledtedRow;
 
 @end
 @implementation CJHomeDropDown
@@ -33,9 +32,9 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView == self.mainTableView) {
-        return self.categories.count;
+        return [self.dataSource numberOfRowInMainTableView:self];
     }else{
-        return self.seledtedCategory.subcategories.count;
+        return [self.dataSource homeDropDown:self subDataForRowInMainTable:self.seledtedRow].count;
     }
 }
 
@@ -46,10 +45,19 @@
     
     if (tableView == self.mainTableView) {
         cell = [CJHomeDropDownMainCell cellWithTableView:tableView];
-        CJCategory *cat = self.categories[indexPath.row];
-        cell.textLabel.text = cat.name;
-        cell.imageView.image = [UIImage imageNamed:cat.small_icon];
-        if (cat.subcategories){
+        cell.textLabel.text = [self.dataSource homeDropDown:self titleForRowInMainTable:indexPath.row];
+        
+        
+        if ([self.dataSource respondsToSelector:@selector(homeDropDown:iconForRowInMainTable:)]) {
+            cell.imageView.image = [UIImage imageNamed:[self.dataSource homeDropDown:self iconForRowInMainTable:indexPath.row]];
+        }
+        if ([self.dataSource respondsToSelector:@selector(homeDropDown:selectedIconForRowInMainTable:)]) {
+            cell.imageView.highlightedImage = [UIImage imageNamed:[self.dataSource homeDropDown:self selectedIconForRowInMainTable:indexPath.row]];
+        }
+        
+        NSArray *subData = [self.dataSource homeDropDown:self subDataForRowInMainTable:self.seledtedRow];
+        
+        if (subData.count){
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }else{
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -58,7 +66,8 @@
     } else{
         cell = [CJHomeDropDownSubCell cellWithTableView:tableView];
      
-        cell.textLabel.text = self.seledtedCategory.subcategories[indexPath.row];
+        cell.textLabel.text = [self.dataSource homeDropDown:self subDataForRowInMainTable:self.seledtedRow][indexPath.row];
+
     }
     
     return cell;
@@ -67,9 +76,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == self.mainTableView) {
-        self.seledtedCategory = self.categories[indexPath.row];
+        self.seledtedRow = indexPath.row;
+        
         [self.subTableView reloadData];
     }
+    
 }
 
 @end

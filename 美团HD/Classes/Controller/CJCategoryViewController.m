@@ -8,9 +8,10 @@
 
 #import "CJCategoryViewController.h"
 #import "CJCategory.h"
+#import "CJMetaTool.h"
 #import "CJHomeDropDown.h"
 #import "MJExtension.h"
-@interface CJCategoryViewController ()
+@interface CJCategoryViewController ()<CJHomeDropDownDataSource>
 
 @end
 
@@ -20,23 +21,41 @@
 {
     CJHomeDropDown *dropDown = [CJHomeDropDown dropdown];
     
-    NSArray *categories = [CJCategory objectArrayWithFilename:@"categories.plist"];
-    dropDown.categories = categories;
+    dropDown.dataSource = self;
     self.view = dropDown;
     
     self.preferredContentSize = dropDown.bounds.size;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
 
-    
+- (NSInteger)numberOfRowInMainTableView:(CJHomeDropDown *)homeDropDown
+{
+    return [CJMetaTool categories].count;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (NSString *)homeDropDown:(CJHomeDropDown *)homeDropDown titleForRowInMainTable:(NSInteger)row
+{
+    CJCategory *cat = [CJMetaTool categories][row];
+    return cat.name;
 }
+- (NSString *)homeDropDown:(CJHomeDropDown *)homeDropDown iconForRowInMainTable:(NSInteger)row
+{
+    CJCategory *cat = [CJMetaTool categories][row];
+    return cat.small_icon;
+}
+
+- (NSString *)homeDropDown:(CJHomeDropDown *)homeDropDown selectedIconForRowInMainTable:(NSInteger)row
+{
+    CJCategory *cat = [CJMetaTool categories][row];
+    return cat.small_highlighted_icon;
+}
+
+- (NSArray *)homeDropDown:(CJHomeDropDown *)homeDropDown subDataForRowInMainTable:(NSInteger)row
+{
+    CJCategory *cat = [CJMetaTool categories][row];
+    return cat.subcategories;
+}
+
 
 
 @end

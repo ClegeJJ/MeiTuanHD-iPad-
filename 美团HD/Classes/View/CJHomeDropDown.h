@@ -7,12 +7,27 @@
 //
 
 #import <UIKit/UIKit.h>
+@class CJHomeDropDown;
+@protocol CJHomeDropDownDataSource <NSObject>
+
+- (NSInteger)numberOfRowInMainTableView:(CJHomeDropDown *)homeDropDown;
+
+- (NSString *)homeDropDown:(CJHomeDropDown *)homeDropDown titleForRowInMainTable:(NSInteger)row;
+
+- (NSString *)homeDropDown:(CJHomeDropDown *)homeDropDown iconForRowInMainTable:(NSInteger)row;
+
+- (NSString *)homeDropDown:(CJHomeDropDown *)homeDropDown selectedIconForRowInMainTable:(NSInteger)row;
+
+- (NSArray *)homeDropDown:(CJHomeDropDown *)homeDropDown subDataForRowInMainTable:(NSInteger)row;
+
+
+@end
+
 
 @interface CJHomeDropDown : UIView
 + (instancetype)dropdown;
 
-/**
- *  分类数据
- */
-@property (nonatomic, strong) NSArray *categories;
+@property (nonatomic, weak) id<CJHomeDropDownDataSource> dataSource;
+
+
 @end

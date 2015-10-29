@@ -8,10 +8,11 @@
 
 #import "CJMetaTool.h"
 #import "CJCity.h"
+#import "CJCategory.h"
 #import "MJExtension.h"
 @implementation CJMetaTool
 
-static NSArray *_cities;
+static NSArray *_cities,*_categories;
 + (NSArray *)cities
 {
     if (!_cities) {
@@ -19,4 +20,14 @@ static NSArray *_cities;
     }
     return _cities;
 }
+
++ (NSArray *)categories
+{
+    if (!_categories) {
+        _categories = [CJCategory objectArrayWithFilename:@"categories.plist"];
+    }
+    return _categories;
+
+}
+
 @end
