@@ -19,7 +19,15 @@
 #import "CJSortViewController.h"
 #import "CJCategory.h"
 #import "CJRegion.h"
-@interface CJHomeViewController ()
+#import "DPAPI.h"
+#import "CJDeal.h"
+#import "MJExtension.h"
+#import "CJDealCell.h"
+#import "MJRefresh.h"
+#import "UIView+AutoLayout.h"
+#import "CJNavigtionController.h"
+#import "CJSearchViewController.h"
+@interface CJHomeViewController () <DPRequestDelegate>
 @property (nonatomic, weak) UIBarButtonItem *categoryItem;
 @property (nonatomic, weak) UIBarButtonItem *regionItem;
 @property (nonatomic, weak) UIBarButtonItem *sortItem;
@@ -37,16 +45,43 @@
 /** 当前选中的排序 */
 @property (nonatomic, strong) CJSort *selectedSort;
 
+@property (nonatomic, strong) NSMutableArray *deals;
+
+/** 记录当前页码 */
+@property (nonatomic, assign) int  currentPage;
+
+@property (nonatomic, weak) DPRequest *lastRequest;
+
+@property (nonatomic, weak) UIImageView *noDataView;
 @end
 
 @implementation CJHomeViewController
 
-static NSString * const reuseIdentifier = @"Cell";
+static NSString * const reuseIdentifier = @"deal";
 
 
+- (NSMutableArray *)deals
+{
+    if (!_deals) {
+        self.deals = [[NSMutableArray alloc] init];
+    }
+    return _deals;
+}
+- (UIImageView *)noDataView
+{
+    if (!_noDataView) {
+        // 添加一个"没有数据"的提醒
+        UIImageView *noDataView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_deals_empty"]];
+        [self.view addSubview:noDataView];
+        [noDataView autoCenterInSuperview];
+        self.noDataView = noDataView;
+    }
+    return _noDataView;
+}
 - (instancetype)init
 {
-    UICollectionViewLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.itemSize = CGSizeMake(305, 305);
     return [self initWithCollectionViewLayout:layout];
 }
 
@@ -54,22 +89,26 @@ static NSString * const reuseIdentifier = @"Cell";
     [super viewDidLoad];
     self.collectionView.backgroundColor = MTGlobalBg;
     
+    self.collectionView.alwaysBounceVertical = YES;
+    
+    
     [self setUpLeftItems];
     
     [self setUpRightItems];
     
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
+    [self setUpNotification];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange:) name:CJCityDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(categoryChange:) name:CJCategoryDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(regionChange:) name:CJRegionDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sortChange:) name:CJSortDidChangeNotification object:nil];
+    [self.collectionView registerNib:[UINib nibWithNibName:@"CJDealCell" bundle:nil] forCellWithReuseIdentifier:reuseIdentifier];
+    
+    self.collectionView.footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreDeals)];
+
 }
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 
 
 #pragma mark - 监听通知
@@ -80,6 +119,8 @@ static NSString * const reuseIdentifier = @"Cell";
     CJHomeNavItem *navItem = (CJHomeNavItem *)self.regionItem.customView;
     [navItem setTitle:[NSString stringWithFormat:@"%@ - 全部", self.selectedCityName]];
     [navItem setSubtitle:nil];
+    
+    [self loadNewDeals];
     
 }
 
@@ -107,7 +148,7 @@ static NSString * const reuseIdentifier = @"Cell";
     [self.categoryPop dismissPopoverAnimated:YES];
     
     // 3.刷新表格数据
-#warning TODO
+    [self loadNewDeals];
     
 }
 
@@ -134,7 +175,7 @@ static NSString * const reuseIdentifier = @"Cell";
     [self.regionPop dismissPopoverAnimated:YES];
     
     // 3.刷新表格数据
-#warning TODO
+    [self loadNewDeals];
 }
 
 - (void)sortChange:(NSNotification *)notification
@@ -143,11 +184,75 @@ static NSString * const reuseIdentifier = @"Cell";
     // 1.更换顶部排序item的文字
     CJHomeNavItem *topItem = (CJHomeNavItem *)self.sortItem.customView;
     [topItem setSubtitle:self.selectedSort.label];
+
+    // 3.刷新表格数据
+    [self loadNewDeals];
+}
+
+
+#pragma mark - 加载团购数据
+- (void)loadDeals
+{
+    DPAPI *dp = [[DPAPI alloc] init];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    // 城市
+    params[@"city"] = self.selectedCityName;
+    // 每页的条数
+    params[@"limit"] = @30;
     
+    params[@"page"] = @(self.currentPage);
+    
+    // 分类(类别)
+    if (self.selectedCategoryName) {
+        params[@"category"] = self.selectedCategoryName;
+    }
+    // 区域
+    if (self.selectedRegionName) {
+        params[@"region"] = self.selectedRegionName;
+    }
+    // 排序
+    if (self.selectedSort) {
+        params[@"sort"] = @(self.selectedSort.value);
+    }
+    self.lastRequest = [dp requestWithURL:@"v1/deal/find_deals" params:params delegate:self];
+    
+}
+
+- (void)loadNewDeals
+{
+    self.currentPage = 1;
+    [self loadDeals];
+}
+
+- (void)loadMoreDeals
+{
+    self.currentPage ++ ;
+    [self loadDeals];
+}
+
+
+- (void)request:(DPRequest *)request didFinishLoadingWithResult:(id)result
+{
+    if (request != self.lastRequest) return;
+    
+    NSArray *dealData = [CJDeal objectArrayWithKeyValuesArray:result[@"deals"]];
 
     
-    // 3.刷新表格数据
-#warning TODO
+    if (self.currentPage == 1) {
+        [self.deals removeAllObjects];
+    }
+    [self.deals addObjectsFromArray:dealData];
+    
+    
+    
+    [self.collectionView reloadData];
+    
+    [self.collectionView.footer endRefreshing];
+}
+
+- (void)request:(DPRequest *)request didFailWithError:(NSError *)error
+{
+    NSLog(@"请求失败--%@", error);
 }
 
 #pragma mark -初始化导航栏按钮
@@ -180,11 +285,29 @@ static NSString * const reuseIdentifier = @"Cell";
     UIBarButtonItem *map = [UIBarButtonItem itemWithTarget:nil action:nil image:@"icon_map" highImage:@"icon_map_highlighted"];
     map.customView.width = 60;
     
-    UIBarButtonItem *search = [UIBarButtonItem itemWithTarget:nil action:nil image:@"icon_search" highImage:@"icon_search_highlighted"];
+    UIBarButtonItem *search = [UIBarButtonItem itemWithTarget:self action:@selector(searchButtonClick) image:@"icon_search" highImage:@"icon_search_highlighted"];
     search.customView.width = 60;
     
     self.navigationItem.rightBarButtonItems = @[map,search];
 
+}
+- (void)setUpNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange:) name:CJCityDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(categoryChange:) name:CJCategoryDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(regionChange:) name:CJRegionDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sortChange:) name:CJSortDidChangeNotification object:nil];
+}
+#pragma mark - 监听屏幕旋转
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    int col = (size.width == 1024 ? 3 : 2);
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionViewLayout;
+    
+    CGFloat inset = (size.width - layout.itemSize.width * col) / (col + 1);
+    
+    layout.sectionInset = UIEdgeInsetsMake(inset, inset, inset, inset);
+    layout.minimumLineSpacing = inset;
 }
 
 #pragma mark - 监听导航栏按钮点击
@@ -215,68 +338,38 @@ static NSString * const reuseIdentifier = @"Cell";
 - (void)sortClick:(UIButton *)button
 {
     CJSortViewController *sortVc = [[CJSortViewController alloc] init];
-//    if (self.selectedCityName) {
-//        // 获得当前选中城市
-//        CJSort *sort = [[[CJMetaTool sorts] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name = %@", self.selectedCityName]] firstObject];
-//        region.regions = city.regions;
-//    }
-    
     UIPopoverController *pop = [[UIPopoverController alloc] initWithContentViewController:sortVc];
     
     [pop presentPopoverFromBarButtonItem:self.sortItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
 }
 
-#pragma mark <UICollectionViewDataSource>
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-
-    return 0;
+- (void)searchButtonClick
+{
+    CJSearchViewController *search = [[CJSearchViewController alloc] init];
+    
+    CJNavigtionController *nav= [[CJNavigtionController alloc] initWithRootViewController:search];
+    
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
-
+#pragma mark <UICollectionViewDataSource>
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    
+    [self viewWillTransitionToSize:CGSizeMake(collectionView.width, 0) withTransitionCoordinator:nil];
 
-    return 0;
+    self.noDataView.hidden = (self.deals.count != 0);
+    
+    return self.deals.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+    CJDealCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     
-    // Configure the cell
+    cell.deal = self.deals[indexPath.row];
     
     return cell;
 }
-
-#pragma mark <UICollectionViewDelegate>
-
-/*
-// Uncomment this method to specify if the specified item should be highlighted during tracking
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-	return YES;
-}
-*/
-
-/*
-// Uncomment this method to specify if the specified item should be selected
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-*/
-
-/*
-// Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath {
-	return NO;
-}
-
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	return NO;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	
-}
-*/
 
 @end
