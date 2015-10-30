@@ -12,7 +12,8 @@
 #import "CJNavigtionController.h"
 #import "CJCityViewController.h"
 #import "CJRegion.h"
-@interface CJRegionController ()<CJHomeDropDownDataSource>
+#import "CJConst.h"
+@interface CJRegionController ()<CJHomeDropDownDataSource,CJHomeDropDownDelegate>
 - (IBAction)changeCity:(id)sender;
 
 @end
@@ -24,6 +25,7 @@
     UIView *title = [self.view.subviews firstObject];
     CJHomeDropDown *dropdowm = [CJHomeDropDown dropdown];
     dropdowm.dataSource = self;
+    dropdowm.delegate = self;
     dropdowm.y = title.height;
     [self.view addSubview:dropdowm];
     
@@ -39,9 +41,34 @@
     CJNavigtionController *nav = [[CJNavigtionController alloc] initWithRootViewController:city];
 
     nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:nav animated:YES completion:nil];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:nav animated:YES completion:nil];
+    
+    
     
 }
+
+
+
+- (void)homeDropDown:(CJHomeDropDown *)homeDropDown didSelectedRowInMainTable:(int)row
+{
+    CJRegion *region = self.regions[row];
+    
+    if (!region.subregions.count) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:CJRegionDidChangeNotification object:nil userInfo:@{ CJSelectedRegion : region}];
+    }
+}
+
+
+- (void)homeDropDown:(CJHomeDropDown *)homeDropDown didSelectedRowInSubTable:(int)row inMainTabel:(int)mainRow
+{
+    CJRegion *region = self.regions[mainRow];
+    [[NSNotificationCenter defaultCenter] postNotificationName:CJRegionDidChangeNotification object:nil userInfo:@{CJSelectSubRegionName : region.subregions[row],
+                                                                                                                     CJSelectedRegion : region}];
+}
+
 
 - (NSInteger)numberOfRowInMainTableView:(CJHomeDropDown *)homeDropDown
 {

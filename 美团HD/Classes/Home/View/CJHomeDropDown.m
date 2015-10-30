@@ -55,7 +55,7 @@
             cell.imageView.highlightedImage = [UIImage imageNamed:[self.dataSource homeDropDown:self selectedIconForRowInMainTable:indexPath.row]];
         }
         
-        NSArray *subData = [self.dataSource homeDropDown:self subDataForRowInMainTable:self.seledtedRow];
+        NSArray *subData = [self.dataSource homeDropDown:self subDataForRowInMainTable:indexPath.row];
         
         if (subData.count){
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -77,8 +77,15 @@
 {
     if (tableView == self.mainTableView) {
         self.seledtedRow = indexPath.row;
-        
         [self.subTableView reloadData];
+        
+        if ([self.delegate respondsToSelector:@selector(homeDropDown:didSelectedRowInMainTable:)]) {
+            [self.delegate homeDropDown:self didSelectedRowInMainTable:indexPath.row];
+        }
+    }else {
+        if ([self.delegate respondsToSelector:@selector(homeDropDown:didSelectedRowInSubTable:inMainTabel:)]) {
+            [self.delegate homeDropDown:self didSelectedRowInSubTable:indexPath.row inMainTabel:self.seledtedRow];
+        }
     }
     
 }

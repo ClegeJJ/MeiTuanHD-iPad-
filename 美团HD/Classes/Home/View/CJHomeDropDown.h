@@ -20,7 +20,13 @@
 - (NSString *)homeDropDown:(CJHomeDropDown *)homeDropDown iconForRowInMainTable:(NSInteger)row;
 
 - (NSString *)homeDropDown:(CJHomeDropDown *)homeDropDown selectedIconForRowInMainTable:(NSInteger)row;
+@end
 
+@protocol CJHomeDropDownDelegate <NSObject>
+
+- (void)homeDropDown:(CJHomeDropDown *)homeDropDown didSelectedRowInMainTable:(int)row;
+
+- (void)homeDropDown:(CJHomeDropDown *)homeDropDown didSelectedRowInSubTable:(int)row inMainTabel:(int)mainRow;
 
 @end
 
@@ -29,6 +35,8 @@
 + (instancetype)dropdown;
 
 @property (nonatomic, weak) id<CJHomeDropDownDataSource> dataSource;
+
+@property (nonatomic, weak) id<CJHomeDropDownDelegate> delegate;
 
 
 @end

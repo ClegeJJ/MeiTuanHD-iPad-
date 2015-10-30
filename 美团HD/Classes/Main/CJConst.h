@@ -10,3 +10,20 @@
 
 extern NSString * const CJCityDidChangeNotification;
 extern NSString * const CJSelectedCityName;
+
+
+extern NSString * const CJCategoryDidChangeNotification;
+extern NSString * const CJSelectedCategory;
+
+extern NSString * const CJCategoryDidChangeNotification;
+extern NSString * const CJSelectedCategory;
+extern NSString * const CJSelectSubcategoryName;
+
+
+extern NSString * const CJRegionDidChangeNotification;
+extern NSString * const CJSelectedRegion;
+extern NSString * const CJSelectSubRegionName;
+
+
+extern NSString * const CJSortDidChangeNotification;
+extern NSString * const CJSelectedSort;

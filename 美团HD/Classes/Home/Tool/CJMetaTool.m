@@ -8,11 +8,12 @@
 
 #import "CJMetaTool.h"
 #import "CJCity.h"
+#import "CJSort.h"
 #import "CJCategory.h"
 #import "MJExtension.h"
 @implementation CJMetaTool
 
-static NSArray *_cities,*_categories;
+static NSArray *_cities,*_categories,*_sort;
 + (NSArray *)cities
 {
     if (!_cities) {
@@ -28,6 +29,14 @@ static NSArray *_cities,*_categories;
     }
     return _categories;
 
+}
+
++ (NSArray *)sorts
+{
+    if (!_sort) {
+        _sort = [CJSort objectArrayWithFilename:@"sorts.plist"];
+    }
+    return _sort;
 }
 
 @end

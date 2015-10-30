@@ -15,4 +15,9 @@
 
 + (NSArray *)categories;
 
+
++ (NSArray *)sorts;
+
+
+
 @end

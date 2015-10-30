@@ -11,7 +11,8 @@
 #import "CJMetaTool.h"
 #import "CJHomeDropDown.h"
 #import "MJExtension.h"
-@interface CJCategoryViewController ()<CJHomeDropDownDataSource>
+#import "CJConst.h"
+@interface CJCategoryViewController ()<CJHomeDropDownDataSource,CJHomeDropDownDelegate>
 
 @end
 
@@ -22,12 +23,33 @@
     CJHomeDropDown *dropDown = [CJHomeDropDown dropdown];
     
     dropDown.dataSource = self;
+    dropDown.delegate = self;
     self.view = dropDown;
     
     self.preferredContentSize = dropDown.bounds.size;
 }
 
+#pragma mark - CJHomeDropDownDelegate
+- (void)homeDropDown:(CJHomeDropDown *)homeDropDown didSelectedRowInMainTable:(int)row
+{
+    
+    CJCategory *category = [CJMetaTool categories][row];
+    
+    if (!category.subcategories.count) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:CJCategoryDidChangeNotification object:nil userInfo:@{ CJSelectedCategory : category}];
+    }
 
+}
+
+- (void)homeDropDown:(CJHomeDropDown *)homeDropDown didSelectedRowInSubTable:(int)row inMainTabel:(int)mainRow
+{
+    CJCategory *category = [CJMetaTool categories][mainRow];
+    [[NSNotificationCenter defaultCenter] postNotificationName:CJCategoryDidChangeNotification object:nil userInfo:@{CJSelectSubcategoryName : category.subcategories[row],
+                        CJSelectedCategory : category}];
+}
+
+
+#pragma mark - CJHomeDropDownDataSource
 - (NSInteger)numberOfRowInMainTableView:(CJHomeDropDown *)homeDropDown
 {
     return [CJMetaTool categories].count;
