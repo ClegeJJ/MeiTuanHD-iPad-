@@ -22,8 +22,8 @@
 		F05240FF1BE0C0040002CC18 /* CJHomeDropDownSubCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F05240F81BE0C0040002CC18 /* CJHomeDropDownSubCell.m */; };
 		F05241001BE0C0040002CC18 /* CJHomeNavItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F05240FA1BE0C0040002CC18 /* CJHomeNavItem.m */; };
 		F05241011BE0C0040002CC18 /* CJHomeNavItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = F05240FB1BE0C0040002CC18 /* CJHomeNavItem.xib */; };
-		F08955151BE1B793008BCD91 /* CJDistrictController.m in Sources */ = {isa = PBXBuildFile; fileRef = F08955131BE1B793008BCD91 /* CJDistrictController.m */; };
-		F08955161BE1B793008BCD91 /* CJDistrictController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F08955141BE1B793008BCD91 /* CJDistrictController.xib */; };
+		F08955151BE1B793008BCD91 /* CJRegionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F08955131BE1B793008BCD91 /* CJRegionController.m */; };
+		F08955161BE1B793008BCD91 /* CJRegionController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F08955141BE1B793008BCD91 /* CJRegionController.xib */; };
 		F08955191BE1BB47008BCD91 /* CJCity.m in Sources */ = {isa = PBXBuildFile; fileRef = F08955181BE1BB47008BCD91 /* CJCity.m */; };
 		F089551D1BE1BEBA008BCD91 /* CJCityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F089551B1BE1BEBA008BCD91 /* CJCityViewController.m */; };
 		F089551E1BE1BEBA008BCD91 /* CJCityViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F089551C1BE1BEBA008BCD91 /* CJCityViewController.xib */; };
@@ -99,9 +99,9 @@
 		F05240F91BE0C0040002CC18 /* CJHomeNavItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJHomeNavItem.h; sourceTree = "<group>"; };
 		F05240FA1BE0C0040002CC18 /* CJHomeNavItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJHomeNavItem.m; sourceTree = "<group>"; };
 		F05240FB1BE0C0040002CC18 /* CJHomeNavItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CJHomeNavItem.xib; sourceTree = "<group>"; };
-		F08955121BE1B793008BCD91 /* CJDistrictController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJDistrictController.h; sourceTree = "<group>"; };
-		F08955131BE1B793008BCD91 /* CJDistrictController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJDistrictController.m; sourceTree = "<group>"; };
-		F08955141BE1B793008BCD91 /* CJDistrictController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CJDistrictController.xib; sourceTree = "<group>"; };
+		F08955121BE1B793008BCD91 /* CJRegionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJRegionController.h; sourceTree = "<group>"; };
+		F08955131BE1B793008BCD91 /* CJRegionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJRegionController.m; sourceTree = "<group>"; };
+		F08955141BE1B793008BCD91 /* CJRegionController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CJRegionController.xib; sourceTree = "<group>"; };
 		F08955171BE1BB47008BCD91 /* CJCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJCity.h; sourceTree = "<group>"; };
 		F08955181BE1BB47008BCD91 /* CJCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJCity.m; sourceTree = "<group>"; };
 		F089551A1BE1BEBA008BCD91 /* CJCityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJCityViewController.h; sourceTree = "<group>"; };
@@ -271,9 +271,9 @@
 				F05240811BE0A9650002CC18 /* CJHomeViewController.m */,
 				F05240951BE0ABE40002CC18 /* CJCategoryViewController.h */,
 				F05240961BE0ABE40002CC18 /* CJCategoryViewController.m */,
-				F08955121BE1B793008BCD91 /* CJDistrictController.h */,
-				F08955131BE1B793008BCD91 /* CJDistrictController.m */,
-				F08955141BE1B793008BCD91 /* CJDistrictController.xib */,
+				F08955121BE1B793008BCD91 /* CJRegionController.h */,
+				F08955131BE1B793008BCD91 /* CJRegionController.m */,
+				F08955141BE1B793008BCD91 /* CJRegionController.xib */,
 				F089551A1BE1BEBA008BCD91 /* CJCityViewController.h */,
 				F089551B1BE1BEBA008BCD91 /* CJCityViewController.m */,
 				F089551C1BE1BEBA008BCD91 /* CJCityViewController.xib */,
@@ -530,7 +530,7 @@
 				F05241011BE0C0040002CC18 /* CJHomeNavItem.xib in Resources */,
 				F05240C21BE0B0A80002CC18 /* cities.plist in Resources */,
 				F089551E1BE1BEBA008BCD91 /* CJCityViewController.xib in Resources */,
-				F08955161BE1B793008BCD91 /* CJDistrictController.xib in Resources */,
+				F08955161BE1B793008BCD91 /* CJRegionController.xib in Resources */,
 				F04455971BDFBA7A00BFDA6E /* Images.xcassets in Resources */,
 				F0B1281D1BE236BB001E08A1 /* Info.plist in Resources */,
 				F05240C31BE0B0A80002CC18 /* cityGroups.plist in Resources */,
@@ -567,7 +567,7 @@
 				F0B127CE1BE20209001E08A1 /* CJCitySearchResultViewController.m in Sources */,
 				F0B1282B1BE236BB001E08A1 /* MJProperty.m in Sources */,
 				F0B128331BE236BB001E08A1 /* main.m in Sources */,
-				F08955151BE1B793008BCD91 /* CJDistrictController.m in Sources */,
+				F08955151BE1B793008BCD91 /* CJRegionController.m in Sources */,
 				F0B128251BE236BB001E08A1 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				F0B128201BE236BB001E08A1 /* MASConstraintMaker.m in Sources */,
 				F05241001BE0C0040002CC18 /* CJHomeNavItem.m in Sources */,

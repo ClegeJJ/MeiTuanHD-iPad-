@@ -8,15 +8,20 @@
 
 #import "CJHomeViewController.h"
 #import "CJConst.h"
+#import "CJCity.h"
 #import "UIView+Extension.h"
 #import "CJHomeNavItem.h"
 #import "CJCategoryViewController.h"
 #import "UIBarButtonItem+Extension.h"
-#import "CJDistrictController.h"
+#import "CJRegionController.h"
+#import "CJMetaTool.h"
 @interface CJHomeViewController ()
 @property (nonatomic, weak) UIBarButtonItem *categoryItem;
 @property (nonatomic, weak) UIBarButtonItem *districtItem;
 @property (nonatomic, weak) UIBarButtonItem *sortItem;
+
+/** 当前选中的城市 */
+@property (nonatomic, copy) NSString *selectedCityName;
 @end
 
 @implementation CJHomeViewController
@@ -45,10 +50,10 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 - (void)cityChange:(NSNotification *)notification
 {
-    NSString *cityName = notification.userInfo[CJSelectedCityName];
+    self.selectedCityName = notification.userInfo[CJSelectedCityName];
     
     CJHomeNavItem *navItem = (CJHomeNavItem *)self.districtItem.customView;
-    [navItem setTitle:[NSString stringWithFormat:@"%@ - 全部", cityName]];
+    [navItem setTitle:[NSString stringWithFormat:@"%@ - 全部", self.selectedCityName]];
     [navItem setSubtitle:nil];
     
 }
@@ -98,8 +103,14 @@ static NSString * const reuseIdentifier = @"Cell";
 
 - (void)districtClick:(UIButton *)button
 {
-    // 显示分类菜单
-    UIPopoverController *pop = [[UIPopoverController alloc] initWithContentViewController:[[CJDistrictController alloc] init]];
+    CJRegionController *region = [[CJRegionController alloc] init];
+    if (self.selectedCityName) {
+        // 获得当前选中城市
+        CJCity *city = [[[CJMetaTool cities] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name = %@", self.selectedCityName]] firstObject];
+        region.regions = city.regions;
+    }
+    
+    UIPopoverController *pop = [[UIPopoverController alloc] initWithContentViewController:region];
     
     [pop presentPopoverFromBarButtonItem:self.districtItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     

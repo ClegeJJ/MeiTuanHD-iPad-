@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CJDistrictController : UIViewController
-
+@interface CJRegionController : UIViewController
+@property (nonatomic, strong) NSArray *regions;
 @end
