@@ -9,6 +9,7 @@
 #import "CJSearchViewController.h"
 #import "UIBarButtonItem+Extension.h"
 #import "CJConst.h"
+#import "MJRefresh.h"
 @interface CJSearchViewController () <UISearchBarDelegate>
 
 @end
@@ -17,7 +18,7 @@
 
 - (void)viewDidLoad {
     
-    self.view.backgroundColor = MTGlobalBg;
+    [super viewDidLoad];
     
     self.navigationItem.leftBarButtonItem = [UIBarButtonItem itemWithTarget:self action:@selector(back) image:@"icon_back" highImage:@"icon_back_highlighted"];
     
@@ -33,5 +34,22 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 
+}
+
+#pragma mark - 搜索框代理
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    // 进入下拉刷新状态, 发送请求给服务器
+    [self.collectionView.header beginRefreshing];
+    
+    // 退出键盘
+    [searchBar resignFirstResponder];
+}
+
+- (void)setupParams:(NSMutableDictionary *)params
+{
+    params[@"city"] = @"北京";
+    UISearchBar *bar = (UISearchBar *)self.navigationItem.titleView;
+    params[@"keyword"] = bar.text;
 }
 @end

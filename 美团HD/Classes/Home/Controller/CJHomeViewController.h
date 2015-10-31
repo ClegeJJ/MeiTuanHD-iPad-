@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface CJHomeViewController : UICollectionViewController
+#import "CJDealsViewController.h"
+@interface CJHomeViewController : CJDealsViewController
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface CJSearchViewController : UIViewController
+#import "CJDealsViewController.h"
+@interface CJSearchViewController : CJDealsViewController
 
 @end

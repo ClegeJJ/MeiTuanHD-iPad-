@@ -94,6 +94,7 @@
 		F0D29B0C1BE39ECD00EB4A67 /* UIScrollView+MJRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D29AF81BE39ECD00EB4A67 /* UIScrollView+MJRefresh.m */; };
 		F0D29B0D1BE39ECD00EB4A67 /* UIView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D29AFA1BE39ECD00EB4A67 /* UIView+MJExtension.m */; };
 		F0D29B121BE3AA1300EB4A67 /* CJSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D29B111BE3AA1300EB4A67 /* CJSearchViewController.m */; };
+		F0D29B151BE3ADD000EB4A67 /* CJDealsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D29B141BE3ADD000EB4A67 /* CJDealsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -275,6 +276,8 @@
 		F0D29AFA1BE39ECD00EB4A67 /* UIView+MJExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MJExtension.m"; sourceTree = "<group>"; };
 		F0D29B101BE3AA1300EB4A67 /* CJSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSearchViewController.h; sourceTree = "<group>"; };
 		F0D29B111BE3AA1300EB4A67 /* CJSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSearchViewController.m; sourceTree = "<group>"; };
+		F0D29B131BE3ADD000EB4A67 /* CJDealsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJDealsViewController.h; sourceTree = "<group>"; };
+		F0D29B141BE3ADD000EB4A67 /* CJDealsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJDealsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -483,6 +486,8 @@
 			children = (
 				F0D29A1A1BE3224400EB4A67 /* CJNavigtionController.h */,
 				F0D29A1B1BE3224400EB4A67 /* CJNavigtionController.m */,
+				F0D29B131BE3ADD000EB4A67 /* CJDealsViewController.h */,
+				F0D29B141BE3ADD000EB4A67 /* CJDealsViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -869,6 +874,7 @@
 				F0D29A541BE3224400EB4A67 /* UIView+AutoLayout.m in Sources */,
 				F0D29A5B1BE3224400EB4A67 /* MJDictionaryCache.m in Sources */,
 				F0D29A471BE3224400EB4A67 /* CJCategory.m in Sources */,
+				F0D29B151BE3ADD000EB4A67 /* CJDealsViewController.m in Sources */,
 				F0D29A9D1BE389F100EB4A67 /* UIImage+GIF.m in Sources */,
 				F0D29A5A1BE3224400EB4A67 /* DPRequest.m in Sources */,
 				F0D29A5E1BE3224400EB4A67 /* MJProperty.m in Sources */,
