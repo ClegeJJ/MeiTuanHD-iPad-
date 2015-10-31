@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+@class CJRestrictions;
 @interface CJDeal : NSObject
 /** 团购单ID */
 @property (copy, nonatomic) NSString *deal_id;
@@ -26,6 +26,13 @@
 @property (copy, nonatomic) NSString *image_url;
 /** 小尺寸团购图片链接，最大图片尺寸160×100 */
 @property (copy, nonatomic) NSString *s_image_url;
-
+/** string	团购发布上线日期 */
 @property (nonatomic, copy) NSString *publish_date;
+/** string	团购单的截止购买日期 */
+@property (nonatomic, copy) NSString *purchase_deadline;
+
+/** string	团购HTML5页面链接，适用于移动应用和联网车载应用 */
+@property (nonatomic, copy) NSString *deal_h5_url;
+
+@property (nonatomic, strong) CJRestrictions *restrictions;
 @end

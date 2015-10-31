@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 #import "CJDealsViewController.h"
 @interface CJSearchViewController : CJDealsViewController
-
+@property (nonatomic, copy) NSString *cityName;
 @end

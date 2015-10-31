@@ -22,6 +22,7 @@
 #import "CJNavigtionController.h"
 #import "CJSearchViewController.h"
 #import "MJRefresh.h"
+#import "MBProgressHUD+MJ.h"
 @interface CJHomeViewController () 
 @property (nonatomic, weak) UIBarButtonItem *categoryItem;
 @property (nonatomic, weak) UIBarButtonItem *regionItem;
@@ -246,7 +247,10 @@
 - (void)searchButtonClick
 {
     CJSearchViewController *search = [[CJSearchViewController alloc] init];
-    
+    search.cityName = self.selectedCityName;
+    if (self.selectedCityName == nil) {
+        [MBProgressHUD showError:@"请先选择城市" toView:self.view];
+    }
     CJNavigtionController *nav= [[CJNavigtionController alloc] initWithRootViewController:search];
     
     [self presentViewController:nav animated:YES completion:nil];

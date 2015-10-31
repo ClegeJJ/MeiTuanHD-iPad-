@@ -15,6 +15,8 @@
 #import "MJExtension.h"
 #import "CJDeal.h"
 #import "UIView+Extension.h"
+#import "CJDetailViewController.h"
+#import "CJSearchViewController.h"
 @interface CJDealsViewController () <DPRequestDelegate>
 @property (nonatomic, strong) NSMutableArray *deals;
 
@@ -164,6 +166,14 @@ static NSString * const reuseIdentifier = @"deal";
     cell.deal = self.deals[indexPath.row];
     
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CJDetailViewController *detailVc = [[CJDetailViewController alloc] init];
+    detailVc.deal = self.deals[indexPath.item];
+//    CJSearchViewController *search = [[CJSearchViewController alloc] init];
+    [self presentViewController:detailVc animated:YES completion:nil];
 }
 
 @end

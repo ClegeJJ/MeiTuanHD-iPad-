@@ -29,11 +29,9 @@
   
 }
 
-
 - (void)back
 {
     [self dismissViewControllerAnimated:YES completion:nil];
-
 }
 
 #pragma mark - 搜索框代理
@@ -48,7 +46,7 @@
 
 - (void)setupParams:(NSMutableDictionary *)params
 {
-    params[@"city"] = @"北京";
+    params[@"city"] = self.cityName;
     UISearchBar *bar = (UISearchBar *)self.navigationItem.titleView;
     params[@"keyword"] = bar.text;
 }
